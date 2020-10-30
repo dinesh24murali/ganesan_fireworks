@@ -1,7 +1,8 @@
 from django.urls import path
-from snippets import views
+from inventoryman import views
 
 urlpatterns = [
-    path('snippets/', views.SnippetList.as_view()),
-    path('snippets/<int:pk>', views.SnippetDetail.as_view()),
+    path('filter_products/', views.CrackerSearch.as_view()),
+    path('product/', views.CrackerView.as_view()),
+    path('product/<int:pk>', views.CrackerDetail.as_view()),
 ]

@@ -5,12 +5,14 @@ import AppProvider from './store/store';
 import NavBar from './components/NavBar/NavBar';
 import AddSales from './components/AddSales/AddSales';
 import ProductListContainer from './containers/ProductListContainer';
+import RootComponents from './components/RootComponents/RootComponents';
 
 function App() {
   return (
     <AppProvider>
       <BrowserRouter>
         <NavBar />
+        <RootComponents />
         <Switch>
           <Route exact path="/sales">
             <AddSales />

@@ -1,60 +1,52 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    NavbarText
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from 'reactstrap';
 
 import { brand } from '../../constants/AppConstants';
 
-const NavBar = (props) => {
-    const [isOpen, setIsOpen] = useState(false);
+const NavBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    const toggle = () => setIsOpen(!isOpen);
-
-    return (
-        <Navbar color="light" light expand="md">
-            <NavbarBrand href="/">{brand}</NavbarBrand>
-            <NavbarToggler onClick={toggle} />
-            <Collapse isOpen={isOpen} navbar>
-                <Nav className="mr-auto" navbar>
-                    <NavItem>
-                        <NavLink href="/components/">Components</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-                    </NavItem>
-                    <UncontrolledDropdown nav inNavbar>
-                        <DropdownToggle nav caret>
-                            Options
-                            </DropdownToggle>
-                        <DropdownMenu right>
-                            <DropdownItem>
-                                Option 1
-                                </DropdownItem>
-                            <DropdownItem>
-                                Option 2
-                                </DropdownItem>
-                            <DropdownItem divider />
-                            <DropdownItem>
-                                Reset
-                                </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                </Nav>
-                <NavbarText>Simple Text</NavbarText>
-            </Collapse>
-        </Navbar>
-    );
-}
+  return (
+    <Navbar style={{ padding: '.45rem 1rem' }} color="secondary" light expand="md">
+      <NavbarBrand>{brand}</NavbarBrand>
+      <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
+      <Collapse isOpen={isOpen} navbar>
+        <Nav className="mr-auto" navbar>
+          <NavItem>
+            <Link className="nav-link" to="/products">Products</Link>
+          </NavItem>
+          <UncontrolledDropdown nav inNavbar>
+            <DropdownToggle nav caret>
+              Sales
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem>
+                <Link className="nav-link" to="/sales">View Sales</Link>
+              </DropdownItem>
+              <DropdownItem>
+                <Link className="nav-link" to="/add-sales">Add Sales</Link>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          <NavItem>
+            <Link className="nav-link" to="/customers">Customers</Link>
+          </NavItem>
+        </Nav>
+      </Collapse>
+    </Navbar>
+  );
+};
 
 export default NavBar;
