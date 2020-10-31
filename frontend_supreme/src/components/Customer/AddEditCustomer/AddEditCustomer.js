@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import _map from 'lodash/map';
 import _isEmpty from 'lodash/isEmpty';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 
-import { packTypes } from '../../../constants/AppConstants';
+import { emailRegularExpression } from '../../../constants/AppConstants';
 
-const AddEditProduct = ({
+const AddEditCustomer = ({
   isOpen,
   onClose,
   isUpdate,
 }) => {
   const [name, setName] = useState('');
   const [errors, setErrors] = useState({});
-  const [packText, setPackText] = useState('');
-  const [price, setPrice] = useState(0);
+  const [phoneNo, setPhoneNo] = useState(undefined);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     if (isUpdate) {
       setName(isUpdate.name);
-      setPackText(isUpdate.pack_text);
-      setPrice(isUpdate.price);
+      setPhoneNo(isUpdate.phone_no);
+      setEmail(isUpdate.email);
     }
   }, [isUpdate]);
 
   const clearForm = () => {
     setName('');
     setErrors({});
-    setPackText('');
-    setPrice(0);
+    setPhoneNo(undefined);
+    setEmail('');
   };
 
   const toggle = (isSave) => {
@@ -36,11 +35,11 @@ const AddEditProduct = ({
       if (_isEmpty(name)) {
         newErrors.name = true;
       }
-      if (_isEmpty(packText)) {
-        newErrors.packText = true;
+      if (!_isEmpty(email) && !emailRegularExpression.test(email)) {
+        newErrors.email = true;
       }
-      if (price <= 0) {
-        newErrors.price = true;
+      if (String(phoneNo).length <= 0 || String(phoneNo).length > 15) {
+        newErrors.phoneNo = true;
       }
       if (!_isEmpty(newErrors)) {
         setErrors(newErrors);
@@ -49,8 +48,8 @@ const AddEditProduct = ({
 
       onClose({
         name,
-        price,
-        pack_text: packText,
+        email,
+        phone_no: phoneNo,
       });
     } else onClose();
     clearForm();
@@ -66,17 +65,17 @@ const AddEditProduct = ({
           return state;
         });
         break;
-      case 'price':
-        setPrice(value);
+      case 'email':
+        setEmail(value);
         setErrors((state) => {
-          state.price = false;
+          state.email = false;
           return state;
         });
         break;
-      case 'packText':
-        setPackText(value);
+      case 'phoneNo':
+        setPhoneNo(value);
         setErrors((state) => {
-          state.packText = false;
+          state.phoneNo = false;
           return state;
         });
         break;
@@ -88,7 +87,7 @@ const AddEditProduct = ({
   return (
     <Modal isOpen={isOpen} toggle={() => toggle(false)}>
       <ModalHeader toggle={() => toggle(false)}>
-        {isUpdate ? isUpdate.name : 'Add Cracker'}
+        {isUpdate ? isUpdate.name : 'Add Customer'}
         {' '}
       </ModalHeader>
       <ModalBody>
@@ -96,33 +95,23 @@ const AddEditProduct = ({
           <div className="row">
             <div className="col-6">
               <FormGroup>
-                <Label for="product-name">Name</Label>
-                <Input invalid={errors.name} value={name} onChange={onChange} type="text" name="name" id="product-name" placeholder="Cracher name" />
+                <Label for="customer-name">Name</Label>
+                <Input invalid={errors.name} value={name} onChange={onChange} type="text" name="name" id="customer-name" placeholder="Cracher name" />
                 <FormFeedback>Name is Required</FormFeedback>
               </FormGroup>
             </div>
             <div className="col-6">
               <FormGroup>
-                <Label for="product-price">Price</Label>
-                <Input invalid={errors.price} value={price} onChange={onChange} type="number" name="price" id="product-price" placeholder="price" />
-                <FormFeedback>Price is Required</FormFeedback>
+                <Label for="customer-phone-no">Phone no</Label>
+                <Input invalid={errors.phoneNo} value={phoneNo} onChange={onChange} type="number" name="phoneNo" id="customer-phone-no" placeholder="Phone Number" />
+                <FormFeedback>Phone Number is Required</FormFeedback>
               </FormGroup>
             </div>
             <div className="col-6">
               <FormGroup>
-                <Label for="product-pack-text">Pack</Label>
-                <Input
-                  invalid={errors.packText}
-                  value={packText}
-                  type="select"
-                  onChange={onChange}
-                  name="packText"
-                  id="product-pack-text"
-                >
-                  <option>-</option>
-                  {_map(packTypes, (item, index) => <option key={index} value={item.value}>{item.label}</option>)}
-                </Input>
-                <FormFeedback>Pack type is Required</FormFeedback>
+                <Label for="customer-email">Email</Label>
+                <Input invalid={errors.email} value={email} onChange={onChange} type="email" name="email" id="customer-email" placeholder="Email" />
+                <FormFeedback>Email is incorrect</FormFeedback>
               </FormGroup>
             </div>
           </div>
@@ -137,4 +126,4 @@ const AddEditProduct = ({
   );
 };
 
-export default AddEditProduct;
+export default AddEditCustomer;

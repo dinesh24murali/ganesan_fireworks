@@ -58,10 +58,11 @@ export default function ProductList({
       <ProductListContainer>
         <div className="product-list-header">
           <div className="product-list-header__search">
-            <input type="text" className="form-control search-input" value={searchText} onChange={onSearch} placeholder="Search" />
+            <input type="text" className="form-control" value={searchText} onChange={onSearch} placeholder="Search" />
           </div>
           <button type="button" title="Add new cracker" onClick={() => setShowModal(true)} className="btn btn-secondary btn-round">
-            <img className="add-item" src={PlusIcon} alt="add" />
+            <img className="add-item mr-3" src={PlusIcon} alt="add" />
+            Add new
           </button>
         </div>
         <div className="product-list">
@@ -79,6 +80,12 @@ export default function ProductList({
                 <div className="product-item-line2__text">
                   <img src={Currency} alt="Rs. " className="product-currency" />
                   {item.price}
+                </div>
+                <div className="product-item-line2__text">
+                  ID:
+                  <span className="id">
+                    {item.id}
+                  </span>
                 </div>
               </div>
             </div>

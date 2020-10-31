@@ -3,17 +3,20 @@ import _isEmpty from 'lodash/isEmpty';
 import _map from 'lodash/map';
 
 export default function SalesList({
-  productList,
-  getProducts,
+  salesList,
+  getSalesList,
 }) {
+
   useEffect(() => {
-    if (_isEmpty(productList)) getProducts();
-  }, [getProducts, productList]);
+    if (_isEmpty(salesList)) {
+      // getSalesList();
+    } 
+  }, []);
 
   return (
     <div>
       <ul>
-        {_map(productList, (item, index) => <li key={index}>{item}</li>)}
+        {_map(salesList, (item, index) => <li key={index}>{index}</li>)}
       </ul>
     </div>
   );

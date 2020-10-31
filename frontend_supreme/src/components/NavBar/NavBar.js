@@ -25,7 +25,10 @@ const NavBar = () => {
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           <NavItem>
-            <Link className="nav-link" to="/products">Products</Link>
+            <Link className="nav-link" to="/crackers">Crackers</Link>
+          </NavItem>
+          <NavItem>
+            <Link className="nav-link" to="/customers">Customers</Link>
           </NavItem>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
@@ -40,9 +43,6 @@ const NavBar = () => {
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-          <NavItem>
-            <Link className="nav-link" to="/customers">Customers</Link>
-          </NavItem>
         </Nav>
       </Collapse>
     </Navbar>

@@ -13,4 +13,5 @@ module.exports = {
     3: 'Packet',
     4: 'Other',
   },
+  emailRegularExpression: /\S+@\S+\.\S+/,
 };

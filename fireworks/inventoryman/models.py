@@ -27,7 +27,7 @@ class Cracker(models.Model):
 class Customer(models.Model):
     name = models.CharField('Customer name', max_length=300, blank=False)
     phone_no = models.CharField('Phone number', max_length=15)
-    email = models.EmailField('Email', max_length=100, default='')
+    email = models.EmailField('Email', max_length=100, default='', blank=True)
 
     def __str__(self):
         return self.name
@@ -37,8 +37,20 @@ class Sales(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     invoice_no = models.CharField('Invoice number', max_length=15)
     date = models.DateTimeField('Sales date')
-    discount = models.DecimalField('Discount', max_digits=4, decimal_places=2, default=0, validators=[MinValueValidator(limit_value=0)])
-    paid = models.DecimalField('Amount paid', max_digits=8, decimal_places=2, default=0, validators=[MinValueValidator(limit_value=0)])
+    discount = models.DecimalField(
+        'Discount',
+        max_digits=4,
+        decimal_places=2,
+        default=0,
+        validators=[MinValueValidator(limit_value=0)]
+    )
+    paid = models.DecimalField(
+        'Amount paid',
+        max_digits=8,
+        decimal_places=2,
+        default=0,
+        validators=[MinValueValidator(limit_value=0)]
+    )
 
     def __str__(self):
         return self.invoice_no

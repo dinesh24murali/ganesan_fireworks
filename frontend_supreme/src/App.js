@@ -1,10 +1,12 @@
 import React from 'react';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 
 import AppProvider from './store/store';
 import NavBar from './components/NavBar/NavBar';
-import AddSales from './components/AddSales/AddSales';
+import SalesListContainer from './containers/SalesListContainer';
+import AddSalesContainer from './containers/AddSalesContainer';
 import ProductListContainer from './containers/ProductListContainer';
+import CustomerListContainer from './containers/CustomerListContainer';
 import RootComponents from './components/RootComponents/RootComponents';
 
 function App() {
@@ -15,10 +17,19 @@ function App() {
         <RootComponents />
         <Switch>
           <Route exact path="/sales">
-            <AddSales />
+            <SalesListContainer />
           </Route>
-          <Route exact path="/products">
+          <Route exact path="/add-sales">
+            <AddSalesContainer />
+          </Route>
+          <Route exact path="/crackers">
             <ProductListContainer />
+          </Route>
+          <Route exact path="/customers">
+            <CustomerListContainer />
+          </Route>
+          <Route exact path="">
+            <Redirect to="/sales" />
           </Route>
         </Switch>
       </BrowserRouter>

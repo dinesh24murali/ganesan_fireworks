@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { gray } from '../../../constants/Colors';
 
-const ProductListContainer = styled.div`
+const CustomerListContainer = styled.div`
 margin-top: 20px;
 box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
 transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -11,7 +11,7 @@ border-radius: 10px;
 background: #fff;
 color: rgba(0,0,0,.87);
 margin-bottom: 10%;
-.product-list-header {
+.customer-list-header {
     padding: 16px;
     display: flex;
     justify-content: space-between;
@@ -24,11 +24,11 @@ margin-bottom: 10%;
         // cursor: pointer;
     }
 }
-.product-list {
-    .product-item {
+.customer-list {
+    .customer-item {
         padding: 16px;
         border-bottom: 1px solid ${gray};
-        .product-item-line1 {
+        .customer-item-line1 {
             display: flex;
             justify-content: space-between;
             &__name {
@@ -40,7 +40,7 @@ margin-bottom: 10%;
                 cursor: pointer;
             }
         }
-        .product-item-line2 {
+        .customer-item-line2 {
             display: flex;
             justify-content: flex-start;
             &__text {
@@ -48,17 +48,17 @@ margin-bottom: 10%;
                 color: black;
                 line-height: 3rem;
                 font-size: 18px;
-                .product-currency {
+                .customer-phone {
                     max-height: 18px;
-                    margin-right: 3px;
+                    margin: 0px 10px;
                 }
-                .product-packing {
-                    max-height: 46px;
-                    margin-right: 3px;
+                .customer-email {
+                    max-height: 25px;
+                    margin: 0px 10px;
                 }
                 .id {
                     font-weight: 400;
-                    margin-left: 10px;
+                    margin: 0px 10px;
                 }
             }
         }
@@ -66,4 +66,4 @@ margin-bottom: 10%;
 }
 `;
 
-export default ProductListContainer;
+export default CustomerListContainer;
