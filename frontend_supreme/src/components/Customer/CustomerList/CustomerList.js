@@ -77,10 +77,10 @@ export default function CustomerList({
                   <span title={item.phone_no}>{item.phone_no}</span>
                 </div>
                 <div className="customer-item-line2__text">
-                    ID:
-                    <span className="id">
-                        {item.id}
-                    </span>
+                  ID:
+                  <span className="id">
+                    {item.id}
+                  </span>
                 </div>
                 {!_isEmpty(item.email) ? <div className="customer-item-line2__text">
                   <img src={Email} alt="pack_text" className="customer-email" />

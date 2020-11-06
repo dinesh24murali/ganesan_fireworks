@@ -114,8 +114,8 @@ class AddSalesView(APIView):
     def post(self, request):
 
         try:
-            is_added = add_sales(request.data)
-            return Response({ "success": True }, status=status.HTTP_201_CREATED)
+            add_sales(request.data)
+            return Response({"success": True}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
             return Response("error", status=status.HTTP_400_BAD_REQUEST)

@@ -22,6 +22,9 @@ function App() {
           <Route exact path="/add-sales">
             <AddSalesContainer />
           </Route>
+          <Route exact path="/edit-sales/:id">
+            <AddSalesContainer />
+          </Route>
           <Route exact path="/crackers">
             <ProductListContainer />
           </Route>

@@ -11,6 +11,7 @@ const initialState = {
   },
   appStatus: {
     toast: { type: null, show: false, message: '' },
+    addEditSalesStatus: { isAdded: null, success: null },
   },
 };
 

@@ -4,13 +4,12 @@ import _map from 'lodash/map';
 
 export default function SalesList({
   salesList,
-  getSalesList,
+  // getSalesList,
 }) {
-
   useEffect(() => {
     if (_isEmpty(salesList)) {
       // getSalesList();
-    } 
+    }
   }, []);
 
   return (

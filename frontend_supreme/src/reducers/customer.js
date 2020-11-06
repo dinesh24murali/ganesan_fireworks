@@ -6,8 +6,6 @@ import ActionTypes from '../constants/ActionTypes';
 export default function (state = initialState.customer, action) {
   switch (action.type) {
     case `${ActionTypes.GET_CUSTOMERS}_SUCCESS`:
-      const tr = action;
-      // debugger;
       return _assign({}, state, {
         customerList: action.data,
       });
