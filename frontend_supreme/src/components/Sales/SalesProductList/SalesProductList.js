@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { FormGroup, Modal, ModalHeader, ModalBody, Input, FormFeedback } from 'reactstrap';
+import {
+  FormGroup, Modal, ModalHeader, ModalBody, Input, FormFeedback,
+  Pagination, PaginationItem, PaginationLink,
+} from 'reactstrap';
 import _isArray from 'lodash/isArray';
 import _map from 'lodash/map';
 import _assign from 'lodash/assign';
 import _forEach from 'lodash/forEach';
+import _isEmpty from 'lodash/isEmpty';
+import _floor from 'lodash/floor';
 
-import { packTypesMap } from '../../../constants/AppConstants';
+import { packTypesMap, tablePageSize } from '../../../constants/AppConstants';
 import SalesProductListContainer from './SalesProductList.style';
 
 import PlusIcon from '../../../assets/svg/plus.svg';
@@ -21,11 +26,28 @@ const SelectProductModal = ({
   searchText,
   onSearch,
   filteredProductList,
+  total,
+  hasNextPage,
+  hasPreviousPage,
 }) => {
   const list = _isArray(filteredProductList) ? filteredProductList : [];
+  const [page, setPage] = useState(1);
+
+  const pageCount = useMemo(() => {
+    if (total <= 0) return [];
+    let numberOfPages = _floor(total / tablePageSize);
+    if (total % tablePageSize > 0) numberOfPages += 1;
+    const temp = [];
+    let i = 1;
+    while (i <= numberOfPages) {
+      temp.push(i);
+      i += 1;
+    }
+    return temp;
+  }, [total]);
 
   useEffect(() => {
-    onSearch({ target: { value: '' } });
+    onSearch({ target: { value: '' } }, 1);
   }, []);
 
   const selectedProductsMap = useMemo(() => {
@@ -50,6 +72,30 @@ const SelectProductModal = ({
     });
   };
 
+  const onPrevious = () => {
+    if (page > 1) {
+      setPage((value) => value - 1);
+      onSearch({ target: { value: searchText } }, page - 1);
+    }
+  };
+
+  const onNext = () => {
+    if (page > -1) {
+      setPage((value) => value + 1);
+      onSearch({ target: { value: searchText } }, page + 1);
+    }
+  };
+
+  const gotoPage = (selectedPage) => {
+    onSearch({ target: { value: searchText } }, selectedPage);
+    setPage(selectedPage);
+  };
+
+  const onChange = (event) => {
+    onSearch(event, 1);
+    setPage(1);
+  };
+
   return (
     <Modal size="lg" isOpen={isOpen} toggle={() => onClose()}>
       <ModalHeader toggle={() => onClose()}>Add/Remove crackers</ModalHeader>
@@ -57,7 +103,7 @@ const SelectProductModal = ({
         <SalesProductListContainer className="mb-0">
           <div className="sales-product-list-header justify-to-start">
             <div className="sales-product-list-header__search">
-              <input type="text" className="form-control" value={searchText} onChange={onSearch} placeholder="Search" />
+              <input type="text" className="form-control" value={searchText} onChange={onChange} placeholder="Search" />
             </div>
           </div>
           {list.length ? <div className="sales-product-list">
@@ -101,6 +147,21 @@ const SelectProductModal = ({
             : <div className="sales-product-list-empty">
               <div>No crackers found</div>
             </div>}
+          <div className="sales-product-pagination-container">
+            {!_isEmpty(pageCount) && <Pagination>
+              <PaginationItem>
+                <PaginationLink disabled={!hasPreviousPage} previous onClick={onPrevious} />
+              </PaginationItem>
+              {_map(pageCount, (item) => <PaginationItem active={item === page} key={item}>
+                <PaginationLink onClick={() => gotoPage(item)}>
+                  {item}
+                </PaginationLink>
+              </PaginationItem>)}
+              <PaginationItem>
+                <PaginationLink disabled={!hasNextPage} next onClick={onNext} />
+              </PaginationItem>
+            </Pagination>}
+          </div>
         </SalesProductListContainer>
       </ModalBody>
     </Modal>
@@ -108,6 +169,8 @@ const SelectProductModal = ({
 };
 
 export default function SalesProductList({
+  hasNextPage,
+  hasPreviousPage,
   productList,
   onChangeList,
   filterProducts,
@@ -125,10 +188,22 @@ export default function SalesProductList({
     });
   };
 
-  const list = _isArray(selectedProductList) ? selectedProductList : [];
+  const { list, total } = useMemo(() => {
+    const tempList = _isArray(selectedProductList) ? selectedProductList : [];
+    let tempTotal = 0;
 
-  const onSearch = ({ target }) => {
-    filterProducts(target.value);
+    _forEach(selectedProductList, (item) => {
+      if (item.quantity) tempTotal += (item.quantity * item.price);
+    });
+
+    return {
+      list: tempList,
+      total: tempTotal,
+    };
+  }, [selectedProductList]);
+
+  const onSearch = ({ target }, pageNumber) => {
+    filterProducts(target.value, pageNumber);
     setSearchText(target.value);
   };
 
@@ -149,6 +224,7 @@ export default function SalesProductList({
 
   return <>
     <SelectProductModal
+      total={total}
       searchText={searchText}
       onSearch={onSearch}
       onChangeList={onChangeList}
@@ -157,6 +233,8 @@ export default function SalesProductList({
       isOpen={showModal}
       onChangeQuantity={onChangeQuantity}
       onClose={() => setShowModal(false)}
+      hasNextPage={hasNextPage}
+      hasPreviousPage={hasPreviousPage}
     />
     <SalesProductListContainer>
       <div className="sales-product-list-header">
@@ -205,6 +283,17 @@ export default function SalesProductList({
         ))}
       </div> : <div className="sales-product-list-empty">
         <button onClick={() => setShowModal(true)} type="button" className="btn btn-primary">Add crackers</button>
+      </div>}
+      {total > 0 && <div className="sales-product-list-footer mr-4 mt-2">
+        <FormGroup>
+          <Input
+            value={total}
+            disabled
+            type="number"
+            bsSize="sm"
+            placeholder="Total"
+          />
+        </FormGroup>
       </div>}
     </SalesProductListContainer>
   </>;

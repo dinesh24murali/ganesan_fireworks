@@ -7,6 +7,9 @@ import SalesProductList from '../components/Sales/SalesProductList/SalesProductL
 
 const mapStateToProps = (state) => ({
   productList: state.product.productList,
+  hasNextPage: state.product.hasNextPage,
+  hasPreviousPage: state.product.hasPreviousPage,
+  total: state.product.total,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(

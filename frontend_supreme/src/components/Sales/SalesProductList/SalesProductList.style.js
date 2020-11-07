@@ -71,11 +71,20 @@ margin-bottom: 10%;
         }
     }
 }
+.sales-product-pagination-container {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+}
 .sales-product-list-empty {
     min-height: 10%;
     padding: 100px 0px;
     display: flex;
     justify-content: center;
+}
+.sales-product-list-footer {
+    display: flex;
+    justify-content: flex-end;
 }
 `;
 

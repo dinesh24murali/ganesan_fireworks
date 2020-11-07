@@ -15,7 +15,13 @@ export const updateCustomer = (id, payload) => ({
   id,
 });
 
-export const filterCustomers = (search) => ({
+export const deleteCustomer = (id) => ({
+  type: ActionTypes.DELETE_CUSTOMER,
+  id,
+});
+
+export const filterCustomers = (search, pageNumber) => ({
   type: ActionTypes.FILTER_CUSTOMERS,
+  pageNumber,
   search,
 });

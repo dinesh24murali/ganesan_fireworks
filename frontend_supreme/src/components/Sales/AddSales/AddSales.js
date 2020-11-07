@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
+import { useParams } from 'react-router-dom';
 import Select from 'react-select';
 import _isEmpty from 'lodash/isEmpty';
 import _map from 'lodash/map';
 import _findIndex from 'lodash/findIndex';
 import _find from 'lodash/find';
 import _isNull from 'lodash/isNull';
-import _get from 'lodash/get';
 import DatePicker from 'react-datepicker';
 
 import getServerDate from '../../../utils/utils';
@@ -16,15 +16,18 @@ import 'react-datepicker/dist/react-datepicker.css';
 import SalesProductListContainer from '../../../containers/SalesProductListContainer';
 
 export default function AddSales({
-  match,
   addSales,
+  editSale,
+  getSales,
+  updateSales,
   customerList,
   filterCustomers,
   showWarningToast,
   addEditSalesStatus,
+  clearEditSalesData,
   clearAddEditSalesStatus,
 }) {
-  const id = useMemo(() => _get(match, 'params.id'), [match]);
+  const { id } = useParams();
 
   const [invoiceNo, setInvoiceNo] = useState('');
   const [discount, setDiscount] = useState();
@@ -36,27 +39,64 @@ export default function AddSales({
   const [errors, setErrors] = useState({});
   const [date, setDate] = useState(new Date());
 
+  const clearForm = () => {
+    clearAddEditSalesStatus();
+    setInvoiceNo('');
+    setDiscount(0);
+    setPaid(0);
+    setSelectedCustomer(null);
+    setErrors({});
+    setProductList([]);
+    setDate(new Date());
+  };
+
   useEffect(() => {
-    filterCustomers('');
+    filterCustomers('', 1);
+    return () => {
+      clearEditSalesData();
+    };
   }, []);
+
+  useEffect(() => {
+    if (id) {
+      getSales(id);
+    } else {
+      clearForm();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (editSale.sales) {
+      const { sales, sales_data } = editSale;
+      setInvoiceNo(sales.invoice_no);
+      const tempDiscount = parseInt(sales.discount, 10);
+      if (tempDiscount) setDiscount(tempDiscount);
+      const tempPaid = parseInt(sales.paid, 10);
+      if (tempPaid) setDiscount(tempPaid);
+      setDate(new Date(sales.date));
+      setProductList(_map(sales_data, (item) => ({
+        id: item.item,
+        name: item.item_name,
+        pack_text: item.pack_text,
+        price: item.price,
+        quantity: item.quantity,
+      })));
+      setSelectedCustomer({ value: sales.customer, label: `${sales.customer_name} - ${sales.customer}` });
+    }
+  }, [editSale]);
 
   useEffect(() => {
     const { isAdded, success } = addEditSalesStatus;
     if (!_isNull(isAdded) && !_isNull(success) && isAdded && success) {
-      clearAddEditSalesStatus();
-      setInvoiceNo('');
-      setDiscount(0);
-      setPaid(0);
-      setSelectedCustomer(null);
-      setErrors({});
-      setProductList([]);
-      setDate(new Date());
+      clearForm();
     }
   }, [addEditSalesStatus]);
 
   useEffect(() => {
     let temp = [];
-    if (!_isEmpty(customerList)) temp = _map(customerList, (item) => ({ value: item.id, label: `${item.name} - ${item.id}` }));
+    if (!_isEmpty(customerList)) {
+      temp = _map(customerList, (item) => ({ value: item.id, label: `${item.name} - ${item.id}` }));
+    }
     setCustomers(temp);
     setIsLoading(false);
   }, [customerList]);
@@ -83,7 +123,7 @@ export default function AddSales({
   };
 
   const onFilterCustomers = (event) => {
-    filterCustomers(event);
+    filterCustomers(event, 1);
     setIsLoading(true);
   };
 
@@ -167,7 +207,19 @@ export default function AddSales({
       return;
     }
 
-    if (!id) {
+    if (id) {
+      updateSales(id, {
+        customer: String(selectedCustomer.value),
+        invoice_no: String(invoiceNo),
+        date: getServerDate(date),
+        discount: discount ? parseInt(discount, 10) : 0,
+        paid: paid ? parseInt(paid, 10) : 0,
+        products: _map(productList, (product) => ({
+          crackerId: String(product.id),
+          quantity: parseInt(product.quantity, 10),
+        })),
+      });
+    } else {
       addSales({
         customer: String(selectedCustomer.value),
         invoice_no: String(invoiceNo),
@@ -183,7 +235,11 @@ export default function AddSales({
   };
 
   return (<AddSalesContainer className="container">
-    <h3>Add Sales</h3>
+    <h3>
+      {id ? 'Update' : 'Add'}
+      {' '}
+      Sales
+    </h3>
     <Form>
       <div className="row">
         <div className="col-6">
