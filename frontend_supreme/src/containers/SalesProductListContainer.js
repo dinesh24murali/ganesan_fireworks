@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { getProducts, addProduct, updateProduct, filterProducts, deleteProduct } from '../actions/product';
 
-import ProductList from '../components/Product/ProductList/ProductList';
+import { filterProducts } from '../actions/product';
+import SalesProductList from '../components/Sales/SalesProductList/SalesProductList';
 
 const mapStateToProps = (state) => ({
   productList: state.product.productList,
@@ -14,13 +14,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(
   {
-    getProducts,
-    addProduct,
-    deleteProduct,
-    updateProduct,
     filterProducts,
   },
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
+export default connect(mapStateToProps, mapDispatchToProps)(SalesProductList);

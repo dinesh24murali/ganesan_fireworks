@@ -39,6 +39,11 @@ margin-bottom: 10%;
                 font-size: 1rem;
                 cursor: pointer;
             }
+            &__delete-button {
+                margin-left: 2rem;
+                max-height: 28px;
+                cursor: pointer;
+            }
         }
         .product-item-line2 {
             display: flex;
@@ -63,6 +68,11 @@ margin-bottom: 10%;
             }
         }
     }
+}
+.product-pagination-container {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
 }
 `;
 

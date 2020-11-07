@@ -24,6 +24,14 @@ export default (state = initialState.appStatus, action) => {
       return _assign({}, state, {
         toast: { type: '', show: false, message: action.message },
       });
+    case ActionTypes.ADD_EDIT_SALES_STATUS:
+      return _assign({}, state, {
+        addEditSalesStatus: { isAdded: action.isAdded, success: action.success },
+      });
+    case `CLEAR_${ActionTypes.ADD_EDIT_SALES_STATUS}`:
+      return _assign({}, state, {
+        addEditSalesStatus: { isAdded: null, success: null },
+      });
     default:
       return state;
   }

@@ -96,7 +96,7 @@ const AddEditCustomer = ({
             <div className="col-6">
               <FormGroup>
                 <Label for="customer-name">Name</Label>
-                <Input invalid={errors.name} value={name} onChange={onChange} type="text" name="name" id="customer-name" placeholder="Cracher name" />
+                <Input invalid={errors.name} value={name} onChange={onChange} type="text" name="name" id="customer-name" placeholder="Customer name" />
                 <FormFeedback>Name is Required</FormFeedback>
               </FormGroup>
             </div>

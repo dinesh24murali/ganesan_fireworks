@@ -35,7 +35,7 @@ class Customer(models.Model):
 
 class Sales(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    invoice_no = models.CharField('Invoice number', max_length=15)
+    invoice_no = models.CharField('Invoice number', max_length=100, unique=True)
     date = models.DateTimeField('Sales date')
     discount = models.DecimalField(
         'Discount',

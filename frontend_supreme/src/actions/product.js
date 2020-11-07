@@ -9,13 +9,19 @@ export const addProduct = (payload) => ({
   payload,
 });
 
+export const deleteProduct = (id) => ({
+  type: ActionTypes.DELETE_PRODUCT,
+  id,
+});
+
 export const updateProduct = (id, payload) => ({
   type: ActionTypes.UPDATE_PRODUCT,
   payload,
   id,
 });
 
-export const filterProducts = (search) => ({
+export const filterProducts = (search, pageNumber) => ({
   type: ActionTypes.FILTER_PRODUCTS,
+  pageNumber,
   search,
 });

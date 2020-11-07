@@ -3,15 +3,21 @@ from inventoryman.models import Sales, SalesData, Customer, Cracker
 
 
 class SalesSerializer(serializers.ModelSerializer):
+    customer_name = serializers.CharField(source='customer.name')
+
     class Meta:
         model = Sales
-        fields = ['id', 'customer', 'invoice_no', 'date', 'discount', 'paid']
+        fields = ['id', 'customer', 'invoice_no', 'date', 'discount', 'paid', 'customer_name']
 
 
 class SalesDataSerializer(serializers.ModelSerializer):
+    item_name = serializers.CharField(source='item.name')
+    price = serializers.CharField(source='item.price')
+    pack_text = serializers.CharField(source='item.pack_text')
+
     class Meta:
         model = SalesData
-        fields = ['item', 'sales_bill', 'quantity']
+        fields = ['item', 'sales_bill', 'quantity', 'item_name', 'pack_text', 'price']
 
 
 class CustomerSerializer(serializers.Serializer):
@@ -35,12 +41,6 @@ class CustomerSerializer(serializers.Serializer):
         instance.phone_no = validated_data.get('phone_no', instance.phone_no)
         instance.save()
         return instance
-
-
-class Customer1Serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = ['id', 'name', 'phone_no', 'email']
 
 
 class CrackerSerializer(serializers.ModelSerializer):

@@ -4,11 +4,12 @@ from rest_framework import filters
 from rest_framework import status
 from django.http import Http404
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 
 from inventoryman.models import Cracker, Customer, Sales
-from inventoryman.serializers import CrackerSerializer, CustomerSerializer, SalesSerializer
+from inventoryman.serializers import CrackerSerializer, CustomerSerializer, SalesSerializer, SalesDataSerializer
 
-from inventoryman.sales_views import add_sales
+from inventoryman.sales_views import add_sales, update_sales
 
 
 class CrackerSearch(generics.ListCreateAPIView):
@@ -57,7 +58,7 @@ class CrackerDetail(APIView):
     def delete(self, request, pk):
         cracker = self.get_object(pk)
         cracker.delete()
-        return Response(status=status.HTTP_204_NO_CONTEXT)
+        return Response(status=status.HTTP_200_OK)
 
 
 class CustomerSearch(generics.ListCreateAPIView):
@@ -106,7 +107,7 @@ class CustomerDetail(APIView):
     def delete(self, request, pk):
         customer = self.get_object(pk)
         customer.delete()
-        return Response(status=status.HTTP_204_NO_CONTEXT)
+        return Response(status=status.HTTP_200_OK)
 
 
 class AddSalesView(APIView):
@@ -114,8 +115,8 @@ class AddSalesView(APIView):
     def post(self, request):
 
         try:
-            is_added = add_sales(request.data)
-            return Response({ "success": True }, status=status.HTTP_201_CREATED)
+            add_sales(request.data)
+            return Response({"success": True}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
             return Response("error", status=status.HTTP_400_BAD_REQUEST)
@@ -132,17 +133,39 @@ class SalesView(APIView):
     def get(self, request, pk):
         sales = self.get_object(pk)
         serializer = SalesSerializer(sales)
-        return Response(serializer.data)
+        sales_data = sales.salesdata_set.all()
+        items = SalesDataSerializer(sales_data, many=True)
+        payload = {
+            "sales": serializer.data,
+            "sales_data": items.data,
+        }
+        return Response(payload)
 
     def put(self, request, pk):
-        sales = self.get_object(pk)
-        serializer = SalesSerializer(sales, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            update_sales(request.data, pk)
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response("error", status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         sales = self.get_object(pk)
         sales.delete()
-        return Response(status=status.HTTP_204_NO_CONTEXT)
+        return Response(status=status.HTTP_200_OK)
+
+
+class GetSalesView(APIView):
+
+    def get(self, request):
+        customer_id = request.GET.get('customer', '')
+        if customer_id:
+            customer = Customer.objects.get(pk=customer_id)
+            queryset = Sales.objects.filter(customer=customer)
+        else:
+            queryset = Sales.objects.all().order_by('-date')
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = SalesSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
